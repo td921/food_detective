@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "food_detective", "food_detective\food_detective.csproj", "{2DC9EEE2-9B28-48C5-891A-D169880C296B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "food_detective", "src\food_detective.csproj", "{995842ED-E0F4-41C2-88D9-EC60FD9177C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2DC9EEE2-9B28-48C5-891A-D169880C296B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2DC9EEE2-9B28-48C5-891A-D169880C296B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2DC9EEE2-9B28-48C5-891A-D169880C296B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2DC9EEE2-9B28-48C5-891A-D169880C296B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{995842ED-E0F4-41C2-88D9-EC60FD9177C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{995842ED-E0F4-41C2-88D9-EC60FD9177C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{995842ED-E0F4-41C2-88D9-EC60FD9177C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{995842ED-E0F4-41C2-88D9-EC60FD9177C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
