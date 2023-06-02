@@ -1,0 +1,67 @@
+﻿@model IngredientsViewModel
+
+<body style="color: white; background-color: black;">
+    <style>
+        h1, h2, p, table, th, td, tr {
+            font-family: "Times New Roman", Times, serif;
+        }
+
+        p, th, td, tr {
+            font-size: 18px;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 10px;
+            margin: 0 auto;
+        }
+
+        th {
+            text-align: center;
+        }
+
+        td {
+            text-align: left;
+            border: 1px solid black;
+            padding: 8px;
+        }
+    </style>
+
+    <h1 style="text-align: center;"><b> All Ingredients</b></h1>
+
+    <p style="text-align: center;"> @Model.AllIngredients</p>
+
+    @if (@Model.HarmfulIngredients.Count != 0)
+    {
+        <h2 class="harmful-ingredients" style="text-align: center; color: red"> <b> Something is fishy! </b></h2>
+        <div class="image-container">
+            <img src="../images/warning_emoji.png" style="height:128px;width:128px;" />
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Harmful Ingredient</th>
+                    <th>Health Risks</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in @Model.HarmfulIngredients.Keys)
+                {
+                    <tr>
+                        <td>@item</td>
+                        <td>@Model.HarmfulIngredients[item]</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    else
+    {
+        <h2 class="no-harmful-ingredients" style="text-align: center;"> No harmful ingredients found!</h2>
+        <div class="image-container">
+            <img src="../images/thumbsup.png" style="height:128px;width:128px;" />
+        </div>
+    }
+</body>

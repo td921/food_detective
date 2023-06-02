@@ -26,16 +26,29 @@ namespace food_detective.Controllers
         {
             if (foodSearchRequestBody.apiKey == null)
             {
-                ViewBag.ErrorMessage = "No API key was supplied. Get one at https://api.data.gov";
+                var errorViewModel = new ErrorViewModel
+                {
+                    Message = "No API key was supplied. Get one at https://api.data.gov"
+                };
+                return View("Error", errorViewModel);
             }
 
-            foodSearchRequestBody.pageSize = 200;
+            if (foodSearchRequestBody.query == null)
+            {
+                var errorViewModel = new ErrorViewModel
+                {
+                    Message = "Food name cannot be empty."
+                };
+                return View("Error", errorViewModel);
+            }
+
+            foodSearchRequestBody.pageSize = 100;
             foodSearchRequestBody.pageNumber = 1;
 
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://api.nal.usda.gov/fdc/v1/foods/search");
-                string queryString = $"?query={foodSearchRequestBody.query}&pageSize={foodSearchRequestBody.pageSize}&pageNumber={foodSearchRequestBody.pageNumber}&sortBy=dataType.keyword&sortOrder=asc&api_key={foodSearchRequestBody.apiKey}";
+                string queryString = $"?query={foodSearchRequestBody.query}&brandOwner={foodSearchRequestBody.brandOwner}&pageSize={foodSearchRequestBody.pageSize}&pageNumber={foodSearchRequestBody.pageNumber}&sortBy=dataType.keyword&sortOrder=asc&api_key={foodSearchRequestBody.apiKey}";
                 string requestUrl = client.BaseAddress + queryString;
 
                 HttpResponseMessage response = await client.GetAsync(requestUrl);

@@ -20,3 +20,48 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+@keyframes rainbow-animation {
+    0% {
+        color: #ff4d4d;
+    }
+    /* Red */
+    14% {
+        color: #ffad4d;
+    }
+    /* Orange */
+    28% {
+        color: #ffeb4d;
+    }
+    /* Yellow */
+    42% {
+        color: #4dff4d;
+    }
+    /* Green */
+    57% {
+        color: #4d8aff;
+    }
+    /* Blue */
+    71% {
+        color: #ad4dff;
+    }
+    /* Indigo */
+    85% {
+        color: #ff4dea;
+    }
+    /* Violet */
+    100% {
+        color: #ff4d4d;
+    }
+    /* Red */
+}
+
+.no-harmful-ingredients {
+    animation: rainbow-animation 6s infinite;
+}
+
+.image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

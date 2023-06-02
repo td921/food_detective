@@ -1,21 +1,36 @@
 ﻿@model food_detective.Models.RequestModels.FoodSearchRequestBody
 
+<style>
+    div, label, button 
+    {
+        font-family: "Times New Roman", Times, serif;
+        font-size: 18px;
+    }
+
+</style>
+
 @using (Html.BeginForm("GetFoods", "Foods", FormMethod.Get))
 {
     <div class="form-group">
-        <label for="Food Name">Food Name:</label>
-        @Html.TextBoxFor(model => model.query, new { @class = "form-control" })
+        <label for="Food Name">Food Name</label>
+        @Html.TextBoxFor(model => model.query, new { @class = "form-control", style = "font-size: 18px;" })
     </div>
+
+    <br />
 
     <div class="form-group">
-        <label for="Pass Key">Pass Key:</label>
-        @Html.TextBoxFor(model => model.apiKey, new { @class = "form-control" })
+        <label for="Pass Key">Pass Key</label>
+        @Html.TextBoxFor(model => model.apiKey, new { @class = "form-control", style = "font-size: 18px;" })
     </div>
+
+    <br />
 
     <div class="form-group">
-        <label for="Pass Key">Brand:</label>
-        @Html.TextBoxFor(model => model.brandOwner, new { @class = "form-control" })
+        <label for="Pass Key">Brand (Optional) </label>
+        @Html.TextBoxFor(model => model.brandOwner, new { @class = "form-control", style = "font-size: 18px;" })
     </div>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <br />
+
+    <button type="submit" class="btn btn-primary" style="font-size: 18px;">Submit</button>
 }

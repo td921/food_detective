@@ -29,6 +29,6 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
     name: "getAllIngredients",
-    pattern: "{controller=Ingredients}/{action=GetAllIngredients}");
+    pattern: "{controller=Ingredients}/{action=GetHarmfulIngredients}");
 
 app.Run();
