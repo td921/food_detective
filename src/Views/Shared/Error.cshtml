@@ -15,7 +15,7 @@
 
 @if (!string.IsNullOrEmpty(@Model.Message))
 {
-    <h2 class="error-message" style="text-align: center;"><b>@Model.Message</b></h2>
+    <h2 class="error-message" style="text-align: center;"><b>@Html.Raw(Model.Message)</b></h2>
 }
 else
 {

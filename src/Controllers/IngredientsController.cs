@@ -1,13 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System.Globalization;
-using food_detective.Models.RequestModels;
-using food_detective.Models.ResponseModels;
 using food_detective.Models;
-using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Collections;
 
 namespace food_detective.Controllers
 {
