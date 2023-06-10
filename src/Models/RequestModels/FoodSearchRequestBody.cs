@@ -6,6 +6,5 @@
         public int? pageSize { get; set; }
         public int? pageNumber { get; set; }
         public string? brandOwner { get; set; }
-        public string apiKey { get; set; }
     }
 }

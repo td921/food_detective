@@ -4,21 +4,12 @@ using food_detective.Models.RequestModels;
 using food_detective.Models.ResponseModels;
 using food_detective.Models;
 using System.Text.RegularExpressions;
-using Microsoft.Extensions.ObjectPool;
-using System.Net;
 using food_detective.Security;
 
 namespace food_detective.Controllers
 {
     public class FoodsController : Controller
     {
-        private readonly ILogger<FoodsController> _logger;
-
-        public FoodsController(ILogger<FoodsController> logger)
-        {
-            _logger = logger;
-        }
-
         public ActionResult Index()
         {
             return View();
@@ -29,16 +20,6 @@ namespace food_detective.Controllers
         {
             var foodName = foodSearchRequestBody.query;
             var brand = foodSearchRequestBody.brandOwner;
-
-            if (foodSearchRequestBody.apiKey == null)
-            {
-                var errorViewModel = new ErrorViewModel
-                {
-                    Message = "No API key was supplied. Get one at https://api.data.gov"
-                };
-
-                return View("Error", errorViewModel);
-            }
 
             if (foodSearchRequestBody.query == null)
             {
@@ -68,23 +49,24 @@ namespace food_detective.Controllers
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://api.nal.usda.gov/fdc/v1/foods/search");
-                string queryString = $"?query={foodName}&brandOwner={brand}&pageSize={foodSearchRequestBody.pageSize}&pageNumber={foodSearchRequestBody.pageNumber}&sortBy=dataType.keyword&sortOrder=asc&api_key={foodSearchRequestBody.apiKey}";
+                string queryString = $"?query={foodName}&brandOwner={brand}&pageSize={foodSearchRequestBody.pageSize}&pageNumber={foodSearchRequestBody.pageNumber}&sortBy=dataType.keyword&sortOrder=asc&api_key=DEMO_KEY";
                 string requestUrl = client.BaseAddress + queryString;
 
                 HttpResponseMessage response = await client.GetAsync(requestUrl);
-
-                if (response.StatusCode == HttpStatusCode.Forbidden)
-                {
-                    var errorViewModel = new ErrorViewModel
-                    {
-                        Message = "Sorry, the pass key provided is invalid. Sign up for a pass key at<br>https://fdc.nal.usda.gov/api-key-signup.html"
-                    };
-
-                    return View("Error", errorViewModel);
-                }    
                 string jsonResponse = await response.Content.ReadAsStringAsync();
 
                 var foods = JsonConvert.DeserializeObject<ApiResponse>(jsonResponse);
+
+                if (foods.Foods.Length == 0)
+                {
+                    var errorViewModel = new ErrorViewModel
+                    {
+                        Message = "Sorry, we couldn't find any foods that match the food name you provided. Please try again."
+                    };
+
+                    return View("Error", errorViewModel);
+                }
+
                 var foodArrayViewModel = new FoodArrayViewModel
                 {
                     Foods = foods.Foods
