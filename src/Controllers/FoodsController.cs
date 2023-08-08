@@ -7,7 +7,7 @@ using food_detective.Security;
 
 namespace food_detective.Controllers
 {
-    public class FoodsController : Controller
+    public class FoodsController : Controller, IFoodController
     {
         public ActionResult Index()
         {
@@ -19,17 +19,75 @@ namespace food_detective.Controllers
         {
             var foodName = foodSearchRequestBody.query;
             var brand = foodSearchRequestBody.brandOwner;
+            foodSearchRequestBody.pageSize = 100;
+            foodSearchRequestBody.pageNumber = 1;
 
-            if (foodName == null)
+            var nullCheckResult = FoodNameNullCheck(foodName);
+
+            if ((nullCheckResult as ViewResult).ViewName == "Error")
+            {
+                return nullCheckResult;
+            }
+
+            var stringVerificationResult = FoodInformationStringVerification(foodName, brand);
+
+            if ((stringVerificationResult as ViewResult).ViewName == "Error")
+            {
+                return stringVerificationResult;
+            }
+
+            var foods = await RetrieveFoodsFromApi(foodName, brand, foodSearchRequestBody);
+
+            var foodsResponseLengthVerificationResult = FoodsResponseLengthCheck(foods.Foods.Length);
+
+            if ((foodsResponseLengthVerificationResult as ViewResult).ViewName == "Error")
+            {
+                return foodsResponseLengthVerificationResult;
+            }
+
+            var foodArrayViewModel = new FoodArrayViewModel
+            {
+                Foods = foods.Foods
+            };
+
+            return View(foodArrayViewModel);
+        }
+
+        private async Task<FoodsControllerApiResponse> RetrieveFoodsFromApi(string foodName, string? brand, FoodSearchRequestBody foodSearchRequestBody)
+        {
+            string jsonResponse = "";
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://api.nal.usda.gov/fdc/v1/foods/search");
+                string queryString = $"?query={foodName}&brandOwner={brand}&pageSize={foodSearchRequestBody.pageSize}&pageNumber={foodSearchRequestBody.pageNumber}&sortBy=dataType.keyword&sortOrder=asc&api_key=DEMO_KEY";
+                string requestUrl = client.BaseAddress + queryString;
+                HttpResponseMessage response = await client.GetAsync(requestUrl);
+                jsonResponse = await response.Content.ReadAsStringAsync();
+            }
+
+            var foods = JsonConvert.DeserializeObject<FoodsControllerApiResponse>(jsonResponse);
+
+            return foods;
+        }
+
+        private IActionResult FoodsResponseLengthCheck(int foodsResponseLength)
+        {
+            if (foodsResponseLength == 0)
             {
                 var errorViewModel = new ErrorViewModel
                 {
-                    Message = "Food name cannot be empty."
+                    Message = "Sorry, we couldn't find any foods that match the food name you provided. Please try again."
                 };
 
                 return View("Error", errorViewModel);
             }
 
+            return View("SuccessfulFunctionCall");
+        }
+
+        private IActionResult FoodInformationStringVerification(string foodName, string? brand)
+        {
             var stringVerificationPass = StringExtensions.StringVerification(foodName, brand);
 
             if (!stringVerificationPass)
@@ -42,37 +100,22 @@ namespace food_detective.Controllers
                 return View("Error", errorViewModel);
             }
 
-            foodSearchRequestBody.pageSize = 100;
-            foodSearchRequestBody.pageNumber = 1;
+            return View("SuccessfulFunctionCall");
+        }
 
-            using (HttpClient client = new HttpClient())
+        private IActionResult FoodNameNullCheck(string foodName)
+        {
+            if (foodName == null)
             {
-                client.BaseAddress = new Uri("https://api.nal.usda.gov/fdc/v1/foods/search");
-                string queryString = $"?query={foodName}&brandOwner={brand}&pageSize={foodSearchRequestBody.pageSize}&pageNumber={foodSearchRequestBody.pageNumber}&sortBy=dataType.keyword&sortOrder=asc&api_key=DEMO_KEY";
-                string requestUrl = client.BaseAddress + queryString;
-
-                HttpResponseMessage response = await client.GetAsync(requestUrl);
-                string jsonResponse = await response.Content.ReadAsStringAsync();
-
-                var foods = JsonConvert.DeserializeObject<ApiResponse>(jsonResponse);
-
-                if (foods.Foods.Length == 0)
+                var errorViewModel = new ErrorViewModel
                 {
-                    var errorViewModel = new ErrorViewModel
-                    {
-                        Message = "Sorry, we couldn't find any foods that match the food name you provided. Please try again."
-                    };
-
-                    return View("Error", errorViewModel);
-                }
-
-                var foodArrayViewModel = new FoodArrayViewModel
-                {
-                    Foods = foods.Foods
+                    Message = "Food name cannot be empty."
                 };
 
-                return View(foodArrayViewModel);
+                return View("Error", errorViewModel);
             }
+
+            return View("SuccessfulFunctionCall");
         }
     }
 }
