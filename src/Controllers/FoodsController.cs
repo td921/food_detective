@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using food_detective.Models.RequestModels;
 using food_detective.Models.ResponseModels;
 using food_detective.Models;
-using System.Text.RegularExpressions;
 using food_detective.Security;
 
 namespace food_detective.Controllers
@@ -21,7 +20,7 @@ namespace food_detective.Controllers
             var foodName = foodSearchRequestBody.query;
             var brand = foodSearchRequestBody.brandOwner;
 
-            if (foodSearchRequestBody.query == null)
+            if (foodName == null)
             {
                 var errorViewModel = new ErrorViewModel
                 {
@@ -31,7 +30,7 @@ namespace food_detective.Controllers
                 return View("Error", errorViewModel);
             }
 
-            var stringVerificationPass = StringVerification(foodName, brand);
+            var stringVerificationPass = StringExtensions.StringVerification(foodName, brand);
 
             if (!stringVerificationPass)
             {
@@ -74,30 +73,6 @@ namespace food_detective.Controllers
 
                 return View(foodArrayViewModel);
             }
-        }
-
-        private bool StringVerification(string foodName, string? brand)
-        {
-            foodName = Regex.Replace(foodName, StringExtensions.StripHtml, string.Empty);
-            foodName = Regex.Replace(foodName, StringExtensions.StripUrl, string.Empty);
-
-            if (!string.IsNullOrEmpty(brand))
-            {
-                brand = Regex.Replace(brand, StringExtensions.StripHtml, string.Empty);
-                brand = Regex.Replace(brand, StringExtensions.StripUrl, string.Empty);
-
-                if (string.IsNullOrEmpty(brand))
-                {
-                    return false;
-                }
-            }
-
-            if (string.IsNullOrEmpty(foodName))
-            {
-                return false;
-            }
-
-            return true;
         }
     }
 }
