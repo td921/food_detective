@@ -29,11 +29,17 @@ namespace food_detective.Controllers
                 return nullCheckResult;
             }
 
-            var stringVerificationResult = FoodInformationStringVerification(foodName, brand);
+            foodName = StringExtensions.RemoveHtml(foodName).RemoveUrl();
+            brand = string.IsNullOrEmpty(brand) ? brand : StringExtensions.RemoveHtml(brand).RemoveUrl();
 
-            if ((stringVerificationResult as ViewResult).ViewName == "Error")
+            if (string.IsNullOrEmpty(foodName))
             {
-                return stringVerificationResult;
+                var errorViewModel = new ErrorViewModel
+                {
+                    Message = "Sorry, the food name provided is invalid. Please review your input and try again."
+                };
+
+                return View("Error", errorViewModel);
             }
 
             var foods = await RetrieveFoodsFromApi(foodName, brand, foodSearchRequestBody);
@@ -78,23 +84,6 @@ namespace food_detective.Controllers
                 var errorViewModel = new ErrorViewModel
                 {
                     Message = "Sorry, we couldn't find any foods that match the food name you provided. Please try again."
-                };
-
-                return View("Error", errorViewModel);
-            }
-
-            return View("SuccessfulFunctionCall");
-        }
-
-        private IActionResult FoodInformationStringVerification(string foodName, string? brand)
-        {
-            var stringVerificationPass = StringExtensions.StringVerification(foodName, brand);
-
-            if (!stringVerificationPass)
-            {
-                var errorViewModel = new ErrorViewModel
-                {
-                    Message = "Sorry, the input provided contains unaccepted content. Please review your input and try again."
                 };
 
                 return View("Error", errorViewModel);

@@ -4,31 +4,20 @@ namespace food_detective.Security
 {
     public static class StringExtensions
     {
-        public static string StripHtml = "<.*?>";
-        public static string StripUrl = @"(https?://\S+|www\.\S+)";
+        public static readonly Regex stripHtmlRegex = new ("[«＜].*?[»＞>]|\\s*<[^>]+>\\s*", RegexOptions.Compiled);
+        public static readonly Regex stripUrlRegex = new (@"https?://", RegexOptions.Compiled);
 
-        public static bool StringVerification(string foodName, string? brand)
+        public static string RemoveHtml(this string input)
         {
-            foodName = Regex.Replace(foodName, StringExtensions.StripHtml, string.Empty);
-            foodName = Regex.Replace(foodName, StringExtensions.StripUrl, string.Empty);
+            return stripHtmlRegex.Replace(input, string.Empty);
+        }
 
-            if (!string.IsNullOrEmpty(brand))
-            {
-                brand = Regex.Replace(brand, StringExtensions.StripHtml, string.Empty);
-                brand = Regex.Replace(brand, StringExtensions.StripUrl, string.Empty);
+        public static string RemoveUrl(this string input)
+        {
+            string result = stripUrlRegex.Replace(input, string.Empty);
+            result = result.Replace(".", ". ");
 
-                if (string.IsNullOrEmpty(brand))
-                {
-                    return false;
-                }
-            }
-
-            if (string.IsNullOrEmpty(foodName))
-            {
-                return false;
-            }
-
-            return true;
+            return result;
         }
     }
 }

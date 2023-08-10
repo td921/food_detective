@@ -1,40 +1,21 @@
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
-using food_detective.Controllers;
-using Microsoft.AspNetCore.Mvc;
-using food_detective.Models.RequestModels;
-using food_detective.Models.ResponseModels;
+﻿using food_detective.Models.RequestModels;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
-using System.Text;
-using System.Text.Json;
-using Microsoft.Owin.Infrastructure;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace unit_tests
-
+namespace integration_tests
 {
-    [TestFixture]
-    public class FoodsControllerTests
+    internal class FoodsControllersTests
     {
         private WebApplicationFactory<Program> _factory;
         private WebApplication _app;
-        private TestServer _server;
         private HttpClient _client;
-        private FoodsController _foodsController;
 
         [SetUp]
         public void Setup()
         {
-            // Create the WebApplicationFactory with the Startup class and specify the desired port
             _factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
             {
-                // Set the desired port here
                 builder.UseUrls("http://localhost:7179");
             });
 
@@ -72,6 +53,43 @@ namespace unit_tests
             // Assert
             Assert.That(response.StatusCode, Is.EqualTo(System.Net.HttpStatusCode.OK));
             Assert.AreEqual(100, occurrences);
+        }
+
+        [Test]
+        public async Task GetFoods_ReturnsErrorWhenNoInputProvided()
+        {
+            // Arrange
+            var foodSearchRequestBody = new FoodSearchRequestBody
+            {
+            };
+
+            var queryString = $"?query={foodSearchRequestBody.query}";
+
+            // Act
+            var response = await _client.GetAsync("/Foods/GetFoods" + queryString);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            // Assert
+            Assert.That(responseBody.Contains("error-message") && responseBody.Contains("Food name cannot be empty."));
+        }
+
+        [Test]
+        public async Task GetFoods_ReturnsErrorWhenNoMatchFound()
+        {
+            // Arrange
+            var foodSearchRequestBody = new FoodSearchRequestBody
+            {
+                query = "Parallellineshavesomuchincommon.It'sashamethey'llnevermeet."
+            };
+
+            var queryString = $"?query={foodSearchRequestBody.query}";
+
+            // Act
+            var response = await _client.GetAsync("/Foods/GetFoods" + queryString);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            // Assert
+            Assert.That(responseBody.Contains("error-message") && responseBody.Contains("Sorry, we couldn't find any foods that match the food name you provided. Please try again."));
         }
 
         private int CountOccurrences(string text)
