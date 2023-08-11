@@ -1,0 +1,21 @@
+﻿@model food_detective.Models.RequestModels.FoodSearchRequestBody
+
+@using (Html.BeginForm("GetFoods", "Foods", FormMethod.Get))
+{
+    <div class="form-group">
+        <label for="Food Name">Food Name:</label>
+        @Html.TextBoxFor(model => model.query, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        <label for="Pass Key">Pass Key:</label>
+        @Html.TextBoxFor(model => model.apiKey, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        <label for="Pass Key">Brand:</label>
+        @Html.TextBoxFor(model => model.brandOwner, new { @class = "form-control" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+}
