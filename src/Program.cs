@@ -1,3 +1,5 @@
+using food_detective.Services.FoodCentralApi;
+
 public partial class Program
 {
     public static void Main(string[] args)
@@ -5,6 +7,7 @@ public partial class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddControllersWithViews();
+        builder.Services.AddSingleton<IFoodCentralApiService, FoodCentralApiService>();
 
         var app = builder.Build();
 

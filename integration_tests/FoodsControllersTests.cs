@@ -8,8 +8,8 @@ namespace integration_tests
     internal class FoodsControllersTests
     {
         private WebApplicationFactory<Program> _factory;
-        private WebApplication _app;
         private HttpClient _client;
+        private readonly WebApplication _app;
 
         [SetUp]
         public void Setup()
