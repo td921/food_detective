@@ -8,6 +8,7 @@ public partial class Program
 
         builder.Services.AddControllersWithViews();
         builder.Services.AddSingleton<IFoodCentralApiService, FoodCentralApiService>();
+        builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
         var app = builder.Build();
 
@@ -31,6 +32,10 @@ public partial class Program
 
         app.UseEndpoints(endpoints =>
         {
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=ToggleDarkMode}");
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Foods}/{action=Index}");

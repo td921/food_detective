@@ -1,0 +1,23 @@
+﻿body.dark-mode 
+{
+    background-color: #121212;
+    color: #4169E1;
+}
+
+h1, h2, h3 {
+    color: #4169E1;
+}
+
+.dark-mode a {
+    color: #4169E1 !important;
+}
+
+button {
+    background-color: #121212;
+    color: #4169E1;
+}
+
+.dark-mode .navbar {
+    background-color: #121212 !important;
+    color: #4169E1;
+}

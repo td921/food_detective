@@ -18,7 +18,13 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 24px;
+    margin-bottom: 60px;
+}
+
+.navbar-brand {
+    font-size: 24px;
 }
 
 @keyframes rainbow-animation {
@@ -64,4 +70,34 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.dark-mode-toggle {
+    width: 40px;
+    height: 20px;
+    position: relative;
+    background-color: #ffffff;
+    border-radius: 15px;
+}
+
+.dark-mode-toggle input[type="checkbox"] {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #cccccc;
+    border-radius: 15px;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+}
+
+.dark-mode-toggle input:checked + .slider 
+{
+    background-color: #000000;
 }

@@ -1,4 +1,10 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿document.addEventListener("DOMContentLoaded", function ()
+{
+    const darkModeCheckbox = document.getElementById("darkModeCheckbox");
+    const body = document.body;
 
-// Write your JavaScript code.
+    darkModeCheckbox.addEventListener("change", function ()
+    {
+        body.classList.toggle("dark-mode", darkModeCheckbox.checked);
+    });
+});
